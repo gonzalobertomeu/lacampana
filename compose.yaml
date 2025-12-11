@@ -6,7 +6,7 @@ services:
       - ./client:/usr/src/app
     ports:
       - 4000:3000
-    command: pnpm dev
+    command: sh -c "pnpm install && pnpm dev"
   engine:
     image: gonzalobertomeu/lacampana-dev
     working_dir: /usr/src/app
@@ -14,4 +14,4 @@ services:
       - ./engine:/usr/src/app
     ports:
       - 3000:3000
-    command: pnpm dev
+    command: sh -c "pnpm install && pnpm dev"
