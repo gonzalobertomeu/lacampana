@@ -1,17 +1,19 @@
 services:
   client:
-    image: gonzalobertomeu/lacampana-dev
+    image: gonzalobertomeu/bun-runtime-dev
+    platform: linux/amd64
     working_dir: /usr/src/app
     volumes:
       - ./client:/usr/src/app
     ports:
-      - 4000:3000
-    command: sh -c "pnpm install && pnpm dev"
+      - 4321:4321
+    command: sh -c "bun install && bun dev --host"
   engine:
-    image: gonzalobertomeu/lacampana-dev
+    image: gonzalobertomeu/bun-runtime-dev
     working_dir: /usr/src/app
+    platform: linux/amd64
     volumes:
       - ./engine:/usr/src/app
     ports:
-      - 3000:3000
-    command: sh -c "pnpm install && pnpm dev"
+      - 1234:1234
+    command: sh -c "bun install && bun dev"

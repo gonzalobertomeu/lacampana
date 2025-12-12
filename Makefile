@@ -1,5 +1,6 @@
 setup:
-	docker buildx build --platform linux/amd64 -f Dockerfile -t gonzalobertomeu/lacampana-dev .
+	docker buildx build --platform linux/amd64 -f bun.dockerfile -t gonzalobertomeu/bun-runtime-dev .
+
 up: setup
 	docker compose up -d
 down:
