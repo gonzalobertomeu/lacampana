@@ -1,8 +1,0 @@
-### 
-
-GET localhost:1234/api/rooms HTTP/1.1
-
-
-### 
-
-POST localhost:1234/api/rooms HTTP/1.1
