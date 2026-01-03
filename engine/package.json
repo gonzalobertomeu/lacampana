@@ -10,7 +10,7 @@
     "typescript": "^5"
   },
   "scripts": {
-    "dev": "bun --hot main.ts"
+    "dev": "bun --watch main.ts"
   },
   "dependencies": {
     "uuid": "^13.0.0",

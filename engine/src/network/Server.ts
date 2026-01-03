@@ -1,6 +1,6 @@
 import type { Server as ServerBun, ServerWebSocket } from "bun";
 
-export interface ServerProps {
+export interface WebsocketMethods {
   open: (ws: ServerWebSocket) => void;
   message: (ws: ServerWebSocket, message: string | Buffer<ArrayBuffer>) => void;
   close?: (
@@ -9,21 +9,31 @@ export interface ServerProps {
     message: string | Buffer<ArrayBuffer>,
   ) => void;
 }
+export interface ServerProps {
+  ws: WebsocketMethods;
+  routes: any;
+}
 export class Server {
   private server: ServerBun<undefined>;
-  public constructor(methods: ServerProps) {
+  public constructor({ ws, routes }: ServerProps) {
     this.server = Bun.serve({
-      websocket: methods,
-      fetch(req, server) {
-        if (server.upgrade(req, undefined)) {
-          return;
-        }
-        throw new Error("Upgrade failed");
+      websocket: ws,
+      port: process.env.PORT ?? 3000,
+      routes: {
+        "/": (req, server) => {
+          if (server.upgrade(req)) {
+            return;
+          }
+          return new Response("Failed to upgrade");
+        },
+        ...routes,
       },
     });
-    console.log(`Server running on port ${this.server.port}`);
   }
   public getServer() {
     return this.server;
+  }
+  public status() {
+    console.log(`Server running on port ${this.server.port}`);
   }
 }

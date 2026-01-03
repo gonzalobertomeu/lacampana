@@ -16,4 +16,6 @@ services:
       - ./engine:/usr/src/app
     ports:
       - 1234:1234
+    environment:
+      PORT: 1234
     command: sh -c "bun install && bun dev"
