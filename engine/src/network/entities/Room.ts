@@ -4,8 +4,8 @@ import { User } from "@/network/entities/User";
 export class Room {
   public id: string;
   private users: Set<User>;
-  public constructor() {
-    this.id = v4();
+  public constructor(id?: string | undefined) {
+    this.id = id ?? v4();
     this.users = new Set();
   }
 

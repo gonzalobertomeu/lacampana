@@ -1,33 +1,28 @@
 import type { Server as ServerBun, ServerWebSocket } from "bun";
 
-export interface WebsocketMethods {
-  open: (ws: ServerWebSocket) => void;
-  message: (ws: ServerWebSocket, message: string | Buffer<ArrayBuffer>) => void;
+export interface WebsocketMethods<T> {
+  open: (ws: ServerWebSocket<T>) => void;
+  message: (
+    ws: ServerWebSocket<T>,
+    message: string | Buffer<ArrayBuffer>,
+  ) => void;
   close?: (
-    ws: ServerWebSocket,
+    ws: ServerWebSocket<T>,
     code: number,
     message: string | Buffer<ArrayBuffer>,
   ) => void;
 }
-export interface ServerProps {
-  ws: WebsocketMethods;
+export interface ServerProps<T> {
+  ws: WebsocketMethods<T>;
   routes: any;
 }
-export class Server {
-  private server: ServerBun<undefined>;
-  public constructor({ ws, routes }: ServerProps) {
-    this.server = Bun.serve({
+export class Server<T = undefined> {
+  private server: ServerBun<T>;
+  public constructor({ ws, routes }: ServerProps<T>) {
+    this.server = Bun.serve<T>({
       websocket: ws,
       port: process.env.PORT ?? 3000,
-      routes: {
-        "/": (req, server) => {
-          if (server.upgrade(req)) {
-            return;
-          }
-          return new Response("Failed to upgrade");
-        },
-        ...routes,
-      },
+      routes: routes,
     });
   }
   public getServer() {
