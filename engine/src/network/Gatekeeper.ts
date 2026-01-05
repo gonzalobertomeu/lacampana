@@ -35,10 +35,13 @@ export class Gatekeeper {
   }
 
   public websocket(): WebsocketMethods<SocketData> {
+    const self = this;
     return {
       open(ws) {
         console.log("User connected: " + ws.data.nick);
-        ws.send("Connected succesfully");
+        const user = self.userConnect(ws.data.nick, ws.data.room.id);
+        user.assignSocket(ws);
+        ws.send(`Connected succesfully ${user.getNick()}`);
       },
       async message(ws, message) {
         console.log(`Message: ${message} from room ${ws.data.nick}`);
@@ -84,6 +87,19 @@ export class Gatekeeper {
           const room = this.createRoom();
           return Response.json(room);
         },
+      },
+      "/api/rooms/:roomId/cast": (req: BunRequest) => {
+        try {
+          const room = this.getRoom(req.params.roomId ?? "");
+          room.getUsers().forEach((user) => {
+            user.notify(`hello user ${user.getNick()}`);
+          });
+          return Response.json({ message: "send broadcast" });
+        } catch (error) {
+          if (error instanceof Error) {
+            return new Response(error.message, { status: 400 });
+          }
+        }
       },
     };
   }
